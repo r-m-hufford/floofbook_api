@@ -1,0 +1,18 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 6543,
+    "username": "ryanmhufford",
+    "password": "password",
+    "database": "postgres",
+    "synchronize": true,
+    "logging": true,
+    "entities": ["src/models/**/*.ts"],
+    "migrations": ["src/migrations/**/*.ts"],
+    "subscribers": ["src/suscribers/**/*.ts"],
+    "cli": {
+        "entitiesDir": "src/models",
+        "migrationsDir": "src/migrations",
+        "subscribersDir": "src/subscribers"
+    }
+}
