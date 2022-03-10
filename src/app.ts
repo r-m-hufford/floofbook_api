@@ -1,5 +1,4 @@
 
-import { create } from "domain";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { User } from "./models/User";
@@ -21,21 +20,33 @@ createConnection().then(connection => {
     app.use(bp());
     
     //login/out endpoints
-    router.get('/login', async ctx => {
+    router.get('/login', async (ctx) => {
+        
         // 1. [FIND] - that the name on the request (ctx.params.name) and look in the 
         // database for someone by name
+        let isAuthenticated: boolean;
+        // find user by name
+        console.log('ctx from login: ', ctx.request.body);
 
-        // 2. [AUTHENTICATE] - once that entry is found confirm that the password in the 
-        // request (ctx.params.password) matches the password in the entry
+        let user = await User.createQueryBuilder('profiles')
+          .where('name = :name', { name: ctx.request.body.name })
+          .getOne();
 
-        // 3. [RETURN] - if it does assign that entry to the response ctx.body
+        console.log('the user from login: ', user);
 
-        
-        let user = await userRepository.findOne(ctx.params.id);
+        if (user.password = ctx.request.body.password) {
+          isAuthenticated = true;
+        } else {
+          isAuthenticated = false;
+        }
+        //This is way better. Figure out how to do it this way.
+        //let resp = await Profile.authenticate(ctx.params.name, ctx.params.password);
+
         ctx.body = {
-            content: 'user',
+            isAuthenticated: isAuthenticated,
             user: user
         };
+        console.log('return ctx from login: ', ctx.body);
     });
 
     router.get('/users', async (ctx) => {

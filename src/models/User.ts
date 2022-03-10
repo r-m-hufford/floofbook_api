@@ -32,10 +32,24 @@ export class User extends BaseEntity {
     .where('LOWER(user.name) = :name', { name: name.toLowerCase().trim() })
     .getOne();
   }
-  
+
   async authenticate(userName: string, password: string) {
+    let isAuthenticated: Boolean;
     let user = await User.findByName(userName);
-    return user;
+
+    if (user.password = password) {
+      isAuthenticated = true;
+    } else {
+      isAuthenticated = false;
+    }
+
+    // add Object assign here
+    let result = {
+      isAuthenticated: isAuthenticated,
+      user: user
+    }
+
+    return result;
   }
 }
 
