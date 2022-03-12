@@ -65,6 +65,32 @@ createConnection().then(connection => {
             user: user
         };
     })
+
+    // CREATE
+    router.post('/user', async (ctx) => {
+        console.log('ctx from the post: ', ctx.request.body);
+        const user = await userRepository.create(ctx.request.body);
+        const result = await userRepository.save(user);
+        ctx.body = result;
+    })
+
+    // UPDATE
+    router.put('/user/:id', async (ctx) => {
+        console.log('ctx from the post: ', ctx.request.body);
+        const user = await userRepository.findOne(ctx.params.id);
+        userRepository.merge(user, ctx.request.body);
+        const result = await userRepository.save(user);
+        ctx.body = result;
+    })
+
+    // DELETE
+    router.delete('/user/:id', async (ctx) => {
+        console.log("id from the delete route: ", ctx.params.id);
+        const user = await userRepository.findOne(ctx.params.id);
+        const name = user.name;
+        userRepository.delete(ctx.params.id);
+        ctx.body = `User id: ${ctx.params.id}. ${name} has been removed from the app.`
+    })
     
     app.use(router.routes()).use(router.allowedMethods());
     app.listen(port, () => console.log(`Server started on port ${port}`));
