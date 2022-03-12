@@ -49,6 +49,7 @@ createConnection().then(connection => {
         console.log('return ctx from login: ', ctx.body);
     });
 
+    // can use for a 'you might know' page/section
     router.get('/users', async (ctx) => {
         let users = await userRepository.find();
         ctx.body = {
@@ -59,11 +60,52 @@ createConnection().then(connection => {
 
     // get user by id
     router.get('/user/:id', async (ctx) => {
+        // if the user number is not the correct format return invalid id format error
         let user = await userRepository.findOne(ctx.params.id);
-        ctx.body = {
-            content: 'user',
-            user: user
-        };
+        if(user) {  
+            ctx.body = {
+                content: 'user',
+                user: user
+            };
+        }
+        if(!user){
+            const err = new Error('There was a problem loading this user');
+            ctx.body = {
+                err: err
+            }
+        }
+    })
+
+    // CREATE
+    router.post('/user', async (ctx) => {
+        console.log('ctx from the post: ', ctx.request.body);
+        if(ctx.body){
+            const user = await userRepository.create(ctx.request.body);
+            const result = await userRepository.save(user);
+            ctx.body = result;
+        }
+        if(!ctx.request.body){
+            const err = new Error('invalid request body')
+            ctx.body = err;
+        }
+    })
+
+    // UPDATE
+    router.put('/user/:id', async (ctx) => {
+        console.log('ctx from the post: ', ctx.request.body);
+        const user = await userRepository.findOne(ctx.params.id);
+        userRepository.merge(user, ctx.request.body);
+        const result = await userRepository.save(user);
+        ctx.body = result;
+    })
+
+    // DELETE
+    router.delete('/user/:id', async (ctx) => {
+        console.log("id from the delete route: ", ctx.params.id);
+        const user = await userRepository.findOne(ctx.params.id);
+        const name = user.name;
+        userRepository.delete(ctx.params.id);
+        ctx.body = `User id: ${ctx.params.id}. ${name} has been removed from the app.`
     })
     
     app.use(router.routes()).use(router.allowedMethods());
