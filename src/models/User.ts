@@ -3,7 +3,7 @@ import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, U
 @Entity('profiles')
 export class User extends BaseEntity {
   
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
   
   @Column({ type: "varchar", length: 50 })
