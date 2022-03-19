@@ -7,7 +7,8 @@ import { User } from "./models/User";
 const Koa = require('koa');
 const KoaRouter = require('koa-router');
 const json = require('koa-json');
-const bp = require('koa-bodyparser')
+const bp = require('koa-bodyparser');
+const cors = require('@koa/cors');
 require('dotenv').config();
 
 createConnection().then(connection => {
@@ -16,6 +17,8 @@ createConnection().then(connection => {
     const port = process.env.PORT;
     const app = new Koa();
     const router = new KoaRouter();
+
+    app.use(cors());
     app.use(json());
     app.use(bp());
     
@@ -79,7 +82,7 @@ createConnection().then(connection => {
     // CREATE
     router.post('/user', async (ctx) => {
         console.log('ctx from the post: ', ctx.request.body);
-        if(ctx.body){
+        if(ctx.request.body){
             const user = await userRepository.create(ctx.request.body);
             const result = await userRepository.save(user);
             ctx.body = result;
