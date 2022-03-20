@@ -79,6 +79,7 @@ createConnection().then(connection => {
         }
     })
 
+
     // CREATE
     router.post('/user', async (ctx) => {
         console.log('ctx from the post: ', ctx.request.body);

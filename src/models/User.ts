@@ -17,7 +17,16 @@ export class User extends BaseEntity {
   
   @Column({ type: "varchar", length: 50 })
   password: string;
+
+  @Column({ type: "varchar", length: 50})
+  favorite_treat: string;
+
+  @Column({ type: "varchar", length: 50})
+  favorite_toy: string;
   
+  @Column({ type: "varchar", length: 252})
+  bio: string;
+
   @CreateDateColumn()
   created_at: Date;
   
